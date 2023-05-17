@@ -234,6 +234,17 @@ if args.precision == "bfloat16":
         elif args.split == 'test':
             test_loss = evaluate(te_iter, model)
             valid_loss = None
+elif args.precision == "float16":
+    with torch.cpu.amp.autocast(enabled=True, dtype=torch.half):
+        if args.split == 'all':
+            test_loss = evaluate(te_iter)
+            valid_loss = evaluate(va_iter)
+        elif args.split == 'valid':
+            valid_loss = evaluate(va_iter)
+            test_loss = None
+        elif args.split == 'test':
+            test_loss = evaluate(te_iter, model)
+            valid_loss = None
 else:
     if args.split == 'all':
         test_loss = evaluate(te_iter)

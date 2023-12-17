@@ -224,7 +224,7 @@ def evaluate(eval_iter, model):
 
 # Run on test data.
 if args.precision == "bfloat16":
-    with torch.cpu.amp.autocast(enabled=True, dtype=torch.bfloat16):
+    with torch.autocast(device_type="cuda" if torch.cuda.is_available() else "cpu", enabled=True, dtype=torch.bfloat16):
         if args.split == 'all':
             test_loss = evaluate(te_iter)
             valid_loss = evaluate(va_iter)
@@ -235,7 +235,7 @@ if args.precision == "bfloat16":
             test_loss = evaluate(te_iter, model)
             valid_loss = None
 elif args.precision == "float16":
-    with torch.cpu.amp.autocast(enabled=True, dtype=torch.half):
+    with torch.autocast(device_type="cuda" if torch.cuda.is_available() else "cpu", enabled=True, dtype=torch.half):
         if args.split == 'all':
             test_loss = evaluate(te_iter)
             valid_loss = evaluate(va_iter)
